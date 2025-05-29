@@ -1,8 +1,9 @@
 
-import React, { useRef } from "react";
+import React from "react";
 import { Camera, Upload, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
+import { Camera as CapacitorCamera, CameraResultType, CameraSource } from '@capacitor/camera';
 
 interface ImageCaptureProps {
   onImageCapture: (imageBase64: string) => void;
@@ -15,50 +16,58 @@ const ImageCapture: React.FC<ImageCaptureProps> = ({
   label, 
   isProcessing = false 
 }) => {
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      if (file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const imageBase64 = e.target?.result as string;
-          onImageCapture(imageBase64);
-        };
-        reader.readAsDataURL(file);
-      } else {
-        toast({
-          title: "שגיאה",
-          description: "יש לבחור קובץ תמונה בלבד",
-          variant: "destructive",
-        });
+  const takePicture = async () => {
+    try {
+      const image = await CapacitorCamera.getPhoto({
+        quality: 90,
+        allowEditing: false,
+        resultType: CameraResultType.DataUrl,
+        source: CameraSource.Camera
+      });
+
+      if (image.dataUrl) {
+        onImageCapture(image.dataUrl);
       }
+    } catch (error) {
+      console.error('Error taking picture:', error);
+      toast({
+        title: "שגיאה",
+        description: "לא ניתן לפתוח את המצלמה",
+        variant: "destructive",
+      });
     }
   };
 
-  const handleCameraClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
+  const selectImage = async () => {
+    try {
+      const image = await CapacitorCamera.getPhoto({
+        quality: 90,
+        allowEditing: false,
+        resultType: CameraResultType.DataUrl,
+        source: CameraSource.Photos
+      });
+
+      if (image.dataUrl) {
+        onImageCapture(image.dataUrl);
+      }
+    } catch (error) {
+      console.error('Error selecting image:', error);
+      toast({
+        title: "שגיאה",
+        description: "לא ניתן לבחור תמונה",
+        variant: "destructive",
+      });
     }
   };
 
   return (
     <div className="space-y-3">
-      <input
-        type="file"
-        ref={fileInputRef}
-        onChange={handleFileSelect}
-        accept="image/*"
-        capture="environment"
-        className="hidden"
-      />
-      
       <div className="grid grid-cols-2 gap-3">
         <Button
           type="button"
           variant="outline"
-          onClick={handleCameraClick}
+          onClick={takePicture}
           disabled={isProcessing}
           className="h-20 flex-col space-y-2"
         >
@@ -73,7 +82,7 @@ const ImageCapture: React.FC<ImageCaptureProps> = ({
         <Button
           type="button"
           variant="outline"
-          onClick={handleCameraClick}
+          onClick={selectImage}
           disabled={isProcessing}
           className="h-20 flex-col space-y-2"
         >
