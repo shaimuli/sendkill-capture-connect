@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Camera, Upload, Send, Loader2 } from "lucide-react";
@@ -88,19 +87,10 @@ const SendKm = () => {
     setIsSending(true);
     
     try {
-      // Here you would send to your actual API endpoint
-      const apiEndpoint = "YOUR_API_ENDPOINT_HERE"; // Replace with actual endpoint
+      const apiUrl = `https://oye-oscam.co.il/UpdateMakor/Index?kilometer=${encodeURIComponent(kilometer)}&licenseid=${encodeURIComponent(vehicleNumber)}`;
       
-      const response = await fetch(apiEndpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          vehicleNumber,
-          kilometer,
-          timestamp: new Date().toISOString()
-        }),
+      const response = await fetch(apiUrl, {
+        method: 'GET',
       });
 
       if (response.ok) {
@@ -175,7 +165,7 @@ const SendKm = () => {
                   id="vehicleNumber"
                   value={vehicleNumber}
                   onChange={(e) => setVehicleNumber(e.target.value)}
-                  placeholder="מספר הרכב יזוהה אוטומטית"
+                  placeholder="מספר הרכב יזוהה אוטומatically"
                   className="text-right"
                 />
               </div>
@@ -211,7 +201,7 @@ const SendKm = () => {
                   id="kilometer"
                   value={kilometer}
                   onChange={(e) => setKilometer(e.target.value)}
-                  placeholder="הקילומטר יזוהה אוטומטית"
+                  placeholder="הקילומטר יזוהה אוטומatically"
                   className="text-right"
                 />
               </div>

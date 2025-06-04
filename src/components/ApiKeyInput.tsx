@@ -21,6 +21,9 @@ const ApiKeyInput: React.FC<ApiKeyInputProps> = ({ onApiKeyChange }) => {
     if (savedApiKey) {
       setApiKey(savedApiKey);
       onApiKeyChange(savedApiKey);
+    } else {
+      // If no API key is saved, show the input expanded
+      setIsExpanded(true);
     }
   }, [onApiKeyChange]);
 
@@ -36,17 +39,43 @@ const ApiKeyInput: React.FC<ApiKeyInputProps> = ({ onApiKeyChange }) => {
     }
   };
 
-  if (!isExpanded) {
+  const handleDeleteApiKey = () => {
+    localStorage.removeItem('openai_api_key');
+    setApiKey("");
+    onApiKeyChange("");
+    toast({
+      title: "API Key נמחק",
+      description: "המפתח נמחק מהמכשיר",
+    });
+    setIsExpanded(true);
+  };
+
+  if (!isExpanded && apiKey) {
     return (
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => setIsExpanded(true)}
-        className="mb-4"
-      >
-        <Settings className="h-4 w-4 mr-2" />
-        הגדרות API
-      </Button>
+      <div className="mb-4 flex items-center justify-between bg-green-50 border border-green-200 rounded-lg p-3">
+        <div className="flex items-center">
+          <Settings className="h-4 w-4 mr-2 text-green-600" />
+          <span className="text-sm text-green-700">API Key מוגדר</span>
+        </div>
+        <div className="flex space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setIsExpanded(true)}
+            className="text-xs"
+          >
+            ערוך
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleDeleteApiKey}
+            className="text-xs text-red-600 hover:text-red-700"
+          >
+            מחק
+          </Button>
+        </div>
+      </div>
     );
   }
 
@@ -94,17 +123,20 @@ const ApiKeyInput: React.FC<ApiKeyInputProps> = ({ onApiKeyChange }) => {
             onClick={handleSaveApiKey}
             size="sm"
             className="text-xs"
+            disabled={!apiKey.trim()}
           >
             שמור
           </Button>
-          <Button
-            variant="outline"
-            onClick={() => setIsExpanded(false)}
-            size="sm"
-            className="text-xs"
-          >
-            ביטול
-          </Button>
+          {apiKey && (
+            <Button
+              variant="outline"
+              onClick={() => setIsExpanded(false)}
+              size="sm"
+              className="text-xs"
+            >
+              ביטול
+            </Button>
+          )}
         </div>
       </CardContent>
     </Card>
