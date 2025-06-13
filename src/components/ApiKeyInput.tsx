@@ -9,9 +9,9 @@ interface ApiKeyInputProps {
 
 const ApiKeyInput: React.FC<ApiKeyInputProps> = ({ onApiKeyChange }) => {
   // החלף את הטקסט הזה במפתח OpenAI האמיתי שלך
-  const FIXED_API_KEY: string = "YOUR_OPENAI_API_KEY_HERE";
+  const FIXED_API_KEY: string = "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";
   
-  const isValidApiKey = FIXED_API_KEY !== "YOUR_OPENAI_API_KEY_HERE" && FIXED_API_KEY.startsWith("sk-");
+  const isValidApiKey = FIXED_API_KEY !== "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" && FIXED_API_KEY.startsWith("sk-");
 
   useEffect(() => {
     if (isValidApiKey) {
