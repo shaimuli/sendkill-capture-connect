@@ -1,20 +1,40 @@
 
 import React, { useEffect } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { AlertTriangle } from "lucide-react";
 
 interface ApiKeyInputProps {
   onApiKeyChange: (apiKey: string) => void;
 }
 
 const ApiKeyInput: React.FC<ApiKeyInputProps> = ({ onApiKeyChange }) => {
-  // API Key קבוע - החלף את המפתח הזה במפתח שלך
-  const FIXED_API_KEY = "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";
+  // החלף את הטקסט הזה במפתח OpenAI האמיתי שלך
+  const FIXED_API_KEY = "YOUR_OPENAI_API_KEY_HERE";
+  
+  const isValidApiKey = FIXED_API_KEY !== "YOUR_OPENAI_API_KEY_HERE" && FIXED_API_KEY.startsWith("sk-");
 
   useEffect(() => {
-    // שלח את המפתח הקבוע לקומפוננטה הראשית
-    onApiKeyChange(FIXED_API_KEY);
-  }, [onApiKeyChange]);
+    if (isValidApiKey) {
+      onApiKeyChange(FIXED_API_KEY);
+    }
+  }, [onApiKeyChange, isValidApiKey]);
 
-  // הקומפוננטה לא מציגה כלום כיוון שהמפתח קבוע
+  if (!isValidApiKey) {
+    return (
+      <Card className="mb-6 border-orange-200 bg-orange-50">
+        <CardContent className="pt-6">
+          <div className="flex items-center space-x-2 text-orange-700">
+            <AlertTriangle className="h-5 w-5" />
+            <div>
+              <p className="font-medium">נדרש להגדיר מפתח OpenAI</p>
+              <p className="text-sm">יש להחליף את הערך בקובץ ApiKeyInput.tsx במפתח האמיתי</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return null;
 };
 
