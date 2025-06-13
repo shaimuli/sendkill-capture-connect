@@ -9,7 +9,7 @@ interface ApiKeyInputProps {
 
 const ApiKeyInput: React.FC<ApiKeyInputProps> = ({ onApiKeyChange }) => {
   // החלף את הטקסט הזה במפתח OpenAI האמיתי שלך
-  const FIXED_API_KEY = "YOUR_OPENAI_API_KEY_HERE";
+  const FIXED_API_KEY: string = "YOUR_OPENAI_API_KEY_HERE";
   
   const isValidApiKey = FIXED_API_KEY !== "YOUR_OPENAI_API_KEY_HERE" && FIXED_API_KEY.startsWith("sk-");
 
