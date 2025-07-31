@@ -34,21 +34,21 @@ const DocumentRegistration = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [documentData, setDocumentData] = useState<DocumentData>({
     reporterName: "",
-    driverName: "יוסי רוטלברג",
+    driverName: "",
     siteName: "",
-    supplierName: "סונול ישראל בע\"מ",
-    deliveryDate: "21/07/2025",
+    supplierName: "",
+    deliveryDate: "",
     unloadingStartTime: "",
     unloadingEndTime: "",
-    minTemp: "29.7",
-    maxTemp: "31",
-    totalCount: "2",
-    deliveryDocumentNumber: "303913968",
-    deliveryDocumentDate: "21/07/2025",
-    unloadingQuantity: "32001",
-    initialMeasurement: "0",
-    finalMeasurement: "1",
-    totalMeasurement: "650"
+    minTemp: "",
+    maxTemp: "",
+    totalCount: "",
+    deliveryDocumentNumber: "",
+    deliveryDocumentDate: "",
+    unloadingQuantity: "",
+    initialMeasurement: "",
+    finalMeasurement: "",
+    totalMeasurement: ""
   });
 
   const handleImageCapture = async (imageBase64: string) => {
