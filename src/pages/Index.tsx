@@ -45,6 +45,22 @@ const Index = () => {
               </CardHeader>
             </Card>
           </Link>
+
+          <Link to="/document-registration">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer bg-green-50 border-green-200">
+              <CardHeader className="pb-3">
+                <div className="flex items-center space-x-3">
+                  <div className="p-2 bg-green-600 rounded-lg">
+                    <Camera className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg text-green-900">רישום תעודה</CardTitle>
+                    <CardDescription className="text-green-700">זיהוי תעודת משלוח</CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+            </Card>
+          </Link>
         </div>
 
         {/* Features Preview */}
