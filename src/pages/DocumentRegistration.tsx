@@ -35,11 +35,11 @@ const DocumentRegistration = () => {
     try {
       // Direct API call to extract delivery date from image
       const prompt = `
-        אנא חלץ את תאריך האספקה מתעודת המשלוח הזו והחזר אותו בפורמט JSON:
-        {
-          "deliveryDate": "DD/MM/YYYY"
-        }
-        חפש תאריך אספקה, תאריך משלוח או תאריך דומה במסמך.
+        Extract the delivery date from this Hebrew delivery document and return ONLY valid JSON in this exact format:
+        {"deliveryDate": "DD/MM/YYYY"}
+        
+        Look for delivery date (תאריך אספקה), shipping date (תאריך משלוח), or similar dates in the document.
+        Return ONLY the JSON, no other text.
       `;
 
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -80,7 +80,12 @@ const DocumentRegistration = () => {
       const result = data.choices[0]?.message?.content?.trim() || '';
       
       try {
-        const parsedData = JSON.parse(result);
+        console.log('OpenAI response:', result);
+        
+        // Clean the result - remove any markdown formatting
+        let cleanResult = result.replace(/```json/g, '').replace(/```/g, '').trim();
+        
+        const parsedData = JSON.parse(cleanResult);
         setDocumentData(prev => ({
           ...prev,
           ...parsedData
@@ -91,9 +96,11 @@ const DocumentRegistration = () => {
           description: "התעודה זוהתה בהצלחה",
         });
       } catch (parseError) {
+        console.error('Parse error:', parseError);
+        console.log('Raw result:', result);
         toast({
           title: "שגיאה",
-          description: "לא ניתן לפרסר את הנתונים מהתעודה",
+          description: `לא ניתן לפרסר את הנתונים מהתעודה. התשובה שהתקבלה: ${result}`,
           variant: "destructive",
         });
       }
