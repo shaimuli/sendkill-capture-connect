@@ -111,8 +111,13 @@ const DocumentRegistration = () => {
       try {
         console.log('OpenAI response:', result);
         
-        // Clean the result - remove any markdown formatting
+        // Clean the result - remove any markdown formatting and fix JSON issues
         let cleanResult = result.replace(/```json/g, '').replace(/```/g, '').trim();
+        
+        // Fix potential JSON parsing issues with Hebrew quotes
+        cleanResult = cleanResult.replace(/בע"מ/g, 'בע״מ');
+        
+        console.log('Cleaned result:', cleanResult);
         
         const parsedData = JSON.parse(cleanResult);
         setDocumentData(prev => ({
