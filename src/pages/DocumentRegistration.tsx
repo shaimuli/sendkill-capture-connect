@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,17 +9,28 @@ import { toast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
 import ImageCapture from "@/components/ImageCapture";
 import ApiKeyInput from "@/components/ApiKeyInput";
-import { extractTextFromImage } from "@/services/openai";
 
 interface DocumentData {
   deliveryDate: string;
+  driverName: string;
+  supplierName: string;
+  deliveryDocumentNumber: string;
+  documentDate: string;
+  minTemperature: string;
+  maxTemperature: string;
 }
 
 const DocumentRegistration = () => {
   const [apiKey, setApiKey] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [documentData, setDocumentData] = useState<DocumentData>({
-    deliveryDate: ""
+    deliveryDate: "",
+    driverName: "",
+    supplierName: "",
+    deliveryDocumentNumber: "",
+    documentDate: "",
+    minTemperature: "",
+    maxTemperature: ""
   });
 
   const handleImageCapture = async (imageBase64: string) => {
@@ -33,12 +45,29 @@ const DocumentRegistration = () => {
 
     setIsProcessing(true);
     try {
-      // Direct API call to extract delivery date from image
+      // Direct API call to extract all document data from image
       const prompt = `
-        Extract the delivery date from this Hebrew delivery document and return ONLY valid JSON in this exact format:
-        {"deliveryDate": "DD/MM/YYYY"}
+        Extract the following information from this Hebrew delivery document and return ONLY valid JSON in this exact format:
+        {
+          "deliveryDate": "DD/MM/YYYY",
+          "driverName": "driver name",
+          "supplierName": "supplier name", 
+          "deliveryDocumentNumber": "document number",
+          "documentDate": "DD/MM/YYYY",
+          "minTemperature": "min temp",
+          "maxTemperature": "max temp"
+        }
         
-        Look for delivery date (תאריך אספקה), shipping date (תאריך משלוח), or similar dates in the document.
+        Look for:
+        - Delivery date (תאריך אספקה)
+        - Driver name (שם נהג)
+        - Supplier name (שם ספק)
+        - Delivery document number (מספר תעודת משלוח)
+        - Document date (תאריך תעודת המשלוח)
+        - Minimum temperature (טמפ' מינ')
+        - Maximum temperature (טמפ' מקס')
+        
+        If any field is not found, use empty string "".
         Return ONLY the JSON, no other text.
       `;
 
@@ -177,6 +206,62 @@ const DocumentRegistration = () => {
                 value={documentData.deliveryDate}
                 onChange={(e) => handleInputChange('deliveryDate', e.target.value)}
               />
+            </div>
+
+            <div>
+              <Label htmlFor="driverName">שם נהג</Label>
+              <Input
+                id="driverName"
+                value={documentData.driverName}
+                onChange={(e) => handleInputChange('driverName', e.target.value)}
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="supplierName">שם ספק</Label>
+              <Input
+                id="supplierName"
+                value={documentData.supplierName}
+                onChange={(e) => handleInputChange('supplierName', e.target.value)}
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="deliveryDocumentNumber">מספר תעודת משלוח</Label>
+              <Input
+                id="deliveryDocumentNumber"
+                value={documentData.deliveryDocumentNumber}
+                onChange={(e) => handleInputChange('deliveryDocumentNumber', e.target.value)}
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="documentDate">תאריך תעודת המשלוח</Label>
+              <Input
+                id="documentDate"
+                value={documentData.documentDate}
+                onChange={(e) => handleInputChange('documentDate', e.target.value)}
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="minTemperature">טמפ׳ מינ׳</Label>
+                <Input
+                  id="minTemperature"
+                  value={documentData.minTemperature}
+                  onChange={(e) => handleInputChange('minTemperature', e.target.value)}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="maxTemperature">טמפ׳ מקס׳</Label>
+                <Input
+                  id="maxTemperature"
+                  value={documentData.maxTemperature}
+                  onChange={(e) => handleInputChange('maxTemperature', e.target.value)}
+                />
+              </div>
             </div>
 
             <Button 
