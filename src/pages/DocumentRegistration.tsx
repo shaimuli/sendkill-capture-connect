@@ -59,13 +59,13 @@ const DocumentRegistration = () => {
         }
         
         Look for:
-        - Delivery date (תאריך אספקה)
-        - Driver name (שם נהג)
-        - Supplier name (שם ספק)
-        - Delivery document number (מספר תעודת משלוח)
-        - Document date (תאריך תעודת המשלוח)
-        - Minimum temperature (טמפ' מינ')
-        - Maximum temperature (טמפ' מקס')
+        - Supplier name: Find the company name at the top of the document (like "סונול ישראל בע"מ")
+        - Driver name: Look for the driver's name (like "יוסי רוטברג"), not other names
+        - Delivery document number: Find the document number in the middle-top area of the document (not numbers like 303913968)
+        - Delivery date (תאריך אספקה): The delivery date
+        - Document date (תאריך תעודת המשלוח): The document creation date
+        - Minimum temperature: Find the "טמפ' במילוי" table and extract the LOWEST temperature value
+        - Maximum temperature: Find the "טמפ' במילוי" table and extract the HIGHEST temperature value
         
         If any field is not found, use empty string "".
         Return ONLY the JSON, no other text.
