@@ -33,16 +33,13 @@ const DocumentRegistration = () => {
 
     setIsProcessing(true);
     try {
-      const extractedText = await extractTextFromImage(imageBase64, 'kilometer', apiKey);
-      
-      // Parse the extracted text and get delivery date only
+      // Direct API call to extract delivery date from image
       const prompt = `
-        בהתבסס על הטקסט הבא מתעודת משלוח, חלץ את תאריך האספקה והחזר בפורמט JSON:
+        אנא חלץ את תאריך האספקה מתעודת המשלוח הזו והחזר אותו בפורמט JSON:
         {
-          "deliveryDate": ""
+          "deliveryDate": "DD/MM/YYYY"
         }
-        
-        טקסט: ${extractedText}
+        חפש תאריך אספקה, תאריך משלוח או תאריך דומה במסמך.
       `;
 
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -56,7 +53,18 @@ const DocumentRegistration = () => {
           messages: [
             {
               role: 'user',
-              content: prompt
+              content: [
+                {
+                  type: 'text',
+                  text: prompt
+                },
+                {
+                  type: 'image_url',
+                  image_url: {
+                    url: imageBase64
+                  }
+                }
+              ]
             }
           ],
           max_tokens: 500,
