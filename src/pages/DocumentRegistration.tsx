@@ -11,44 +11,14 @@ import ApiKeyInput from "@/components/ApiKeyInput";
 import { extractTextFromImage } from "@/services/openai";
 
 interface DocumentData {
-  reporterName: string;
-  driverName: string;
-  siteName: string;
-  supplierName: string;
   deliveryDate: string;
-  unloadingStartTime: string;
-  unloadingEndTime: string;
-  minTemp: string;
-  maxTemp: string;
-  totalCount: string;
-  deliveryDocumentNumber: string;
-  deliveryDocumentDate: string;
-  unloadingQuantity: string;
-  initialMeasurement: string;
-  finalMeasurement: string;
-  totalMeasurement: string;
 }
 
 const DocumentRegistration = () => {
   const [apiKey, setApiKey] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [documentData, setDocumentData] = useState<DocumentData>({
-    reporterName: "",
-    driverName: "",
-    siteName: "",
-    supplierName: "",
-    deliveryDate: "",
-    unloadingStartTime: "",
-    unloadingEndTime: "",
-    minTemp: "",
-    maxTemp: "",
-    totalCount: "",
-    deliveryDocumentNumber: "",
-    deliveryDocumentDate: "",
-    unloadingQuantity: "",
-    initialMeasurement: "",
-    finalMeasurement: "",
-    totalMeasurement: ""
+    deliveryDate: ""
   });
 
   const handleImageCapture = async (imageBase64: string) => {
@@ -65,23 +35,11 @@ const DocumentRegistration = () => {
     try {
       const extractedText = await extractTextFromImage(imageBase64, 'kilometer', apiKey);
       
-      // Parse the extracted text and populate fields
-      // This is a simplified version - you might want to improve the parsing logic
+      // Parse the extracted text and get delivery date only
       const prompt = `
-        בהתבסס על הטקסט הבא מתעודת משלוח, חלץ את הערכים הבאים ובמחזיר בפורמט JSON:
+        בהתבסס על הטקסט הבא מתעודת משלוח, חלץ את תאריך האספקה והחזר בפורמט JSON:
         {
-          "driverName": "",
-          "supplierName": "",
-          "deliveryDate": "",
-          "minTemp": "",
-          "maxTemp": "",
-          "totalCount": "",
-          "deliveryDocumentNumber": "",
-          "deliveryDocumentDate": "",
-          "unloadingQuantity": "",
-          "initialMeasurement": "",
-          "finalMeasurement": "",
-          "totalMeasurement": ""
+          "deliveryDate": ""
         }
         
         טקסט: ${extractedText}
@@ -197,154 +155,13 @@ const DocumentRegistration = () => {
             <CardTitle className="text-green-900">פרטי התעודה</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="reporterName">שם מדווח</Label>
-                <Input
-                  id="reporterName"
-                  value={documentData.reporterName}
-                  onChange={(e) => handleInputChange('reporterName', e.target.value)}
-                  placeholder="להשאיר ריק"
-                />
-              </div>
-              
-              <div>
-                <Label htmlFor="driverName">שם נהג</Label>
-                <Input
-                  id="driverName"
-                  value={documentData.driverName}
-                  onChange={(e) => handleInputChange('driverName', e.target.value)}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="siteName">שם האתר</Label>
-                <Input
-                  id="siteName"
-                  value={documentData.siteName}
-                  onChange={(e) => handleInputChange('siteName', e.target.value)}
-                  placeholder="להשאיר ריק"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="supplierName">שם ספק</Label>
-                <Input
-                  id="supplierName"
-                  value={documentData.supplierName}
-                  onChange={(e) => handleInputChange('supplierName', e.target.value)}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="deliveryDate">תאריך אספקה</Label>
-                <Input
-                  id="deliveryDate"
-                  value={documentData.deliveryDate}
-                  onChange={(e) => handleInputChange('deliveryDate', e.target.value)}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="unloadingStartTime">שעת התחלת פריקה</Label>
-                <Input
-                  id="unloadingStartTime"
-                  value={documentData.unloadingStartTime}
-                  onChange={(e) => handleInputChange('unloadingStartTime', e.target.value)}
-                  placeholder="להשאיר ריק"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="unloadingEndTime">שעת סיום פריקה</Label>
-                <Input
-                  id="unloadingEndTime"
-                  value={documentData.unloadingEndTime}
-                  onChange={(e) => handleInputChange('unloadingEndTime', e.target.value)}
-                  placeholder="להשאיר ריק"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="minTemp">טמפ' מינ'</Label>
-                <Input
-                  id="minTemp"
-                  value={documentData.minTemp}
-                  onChange={(e) => handleInputChange('minTemp', e.target.value)}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="maxTemp">טמפ' מקס'</Label>
-                <Input
-                  id="maxTemp"
-                  value={documentData.maxTemp}
-                  onChange={(e) => handleInputChange('maxTemp', e.target.value)}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="totalCount">סה"כ מונה</Label>
-                <Input
-                  id="totalCount"
-                  value={documentData.totalCount}
-                  onChange={(e) => handleInputChange('totalCount', e.target.value)}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="deliveryDocumentNumber">מספר תעודת משלוח</Label>
-                <Input
-                  id="deliveryDocumentNumber"
-                  value={documentData.deliveryDocumentNumber}
-                  onChange={(e) => handleInputChange('deliveryDocumentNumber', e.target.value)}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="deliveryDocumentDate">תאריך תעודת המשלוח</Label>
-                <Input
-                  id="deliveryDocumentDate"
-                  value={documentData.deliveryDocumentDate}
-                  onChange={(e) => handleInputChange('deliveryDocumentDate', e.target.value)}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="unloadingQuantity">כמות לפריקה(תעודה)</Label>
-                <Input
-                  id="unloadingQuantity"
-                  value={documentData.unloadingQuantity}
-                  onChange={(e) => handleInputChange('unloadingQuantity', e.target.value)}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="initialMeasurement">כמות לפי מדיד בתחילה</Label>
-                <Input
-                  id="initialMeasurement"
-                  value={documentData.initialMeasurement}
-                  onChange={(e) => handleInputChange('initialMeasurement', e.target.value)}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="finalMeasurement">כמות לפי מדיד בסיום</Label>
-                <Input
-                  id="finalMeasurement"
-                  value={documentData.finalMeasurement}
-                  onChange={(e) => handleInputChange('finalMeasurement', e.target.value)}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="totalMeasurement">סה''כ מדיד</Label>
-                <Input
-                  id="totalMeasurement"
-                  value={documentData.totalMeasurement}
-                  onChange={(e) => handleInputChange('totalMeasurement', e.target.value)}
-                />
-              </div>
+            <div>
+              <Label htmlFor="deliveryDate">תאריך אספקה</Label>
+              <Input
+                id="deliveryDate"
+                value={documentData.deliveryDate}
+                onChange={(e) => handleInputChange('deliveryDate', e.target.value)}
+              />
             </div>
 
             <Button 
